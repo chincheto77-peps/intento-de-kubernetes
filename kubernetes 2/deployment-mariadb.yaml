@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+name: mariadb
+namespace: grupo3
+spec:
+selector:
+matchLabels:
+app: mariadb
+template:
+metadata:
+labels:
+app: mariadb
+spec:
+containers:
+- name: mariadb
+image: mariadb:10.6
+envFrom:
+- secretRef:
+name: mariadb-secret
+volumeMounts:
+- name: datos
+mountPath: /var/lib/mysql
+- name: initdb
+mountPath: /docker-entrypoint-initdb.d
+volumes:
+- name: datos
+persistentVolumeClaim:
+claimName: pvc-grupo3
+- name: initdb
+configMap:
+name: mariadb-init
